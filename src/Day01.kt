@@ -1,17 +1,72 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
-    }
-
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
-
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
-
     val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+
+    part1(input).printlnWithPrefix("Part1")
+    part2(input).printlnWithPrefix("Part2")
+}
+
+fun part1(input: List<String>): Int
+{
+    val numbers = mutableListOf<Int>()
+
+    input.forEach { line ->
+        val lineNumbers = line
+            .filter { it.isDigit() }
+            .map { it.digitToInt() }
+
+        val first = lineNumbers.first()
+        val last = lineNumbers.last()
+        numbers.add("$first$last".toInt())
+    }
+
+    return numbers.sum()
+}
+
+fun part2(input: List<String>): Int
+{
+    val cleared = input.map { prepareLine(it) }
+
+    return part1(cleared)
+}
+
+val digitToNumberMap = mapOf(
+    "one" to "1",
+    "two" to "2",
+    "three" to "3",
+    "four" to "4",
+    "five" to "5",
+    "six" to "6",
+    "seven" to "7",
+    "eight" to "8",
+    "nine" to "9"
+)
+
+val regex = "(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)".toRegex()
+
+fun prepareLine(line: String): String
+{
+    var clearedLine = ""
+
+    for (i in line.indices)
+    {
+        val char = line[i]
+
+        if(char.isDigit())
+        {
+            clearedLine += "$char"
+            continue
+        }
+
+        val sub = line.substring(i)
+        for ((digit, number) in digitToNumberMap)
+        {
+            if(sub.startsWith(digit))
+            {
+                clearedLine += number
+                break
+            }
+        }
+    }
+
+    return clearedLine
 }
