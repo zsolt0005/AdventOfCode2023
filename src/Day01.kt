@@ -1,72 +1,73 @@
 fun main() {
     val input = readInput("Day01")
 
-    part1(input).printlnWithPrefix("Part1")
-    part2(input).printlnWithPrefix("Part2")
+    Day01().part1(input).printlnWithPrefix("Part1")
+    Day01().part2(input).printlnWithPrefix("Part2")
 }
 
-fun part1(input: List<String>): Int
+class Day01
 {
-    val numbers = mutableListOf<Int>()
+    private val digitToNumberMap = mapOf(
+        "one" to "1",
+        "two" to "2",
+        "three" to "3",
+        "four" to "4",
+        "five" to "5",
+        "six" to "6",
+        "seven" to "7",
+        "eight" to "8",
+        "nine" to "9"
+    )
 
-    input.forEach { line ->
-        val lineNumbers = line
-            .filter { it.isDigit() }
-            .map { it.digitToInt() }
-
-        val first = lineNumbers.first()
-        val last = lineNumbers.last()
-        numbers.add("$first$last".toInt())
-    }
-
-    return numbers.sum()
-}
-
-fun part2(input: List<String>): Int
-{
-    val cleared = input.map { prepareLine(it) }
-
-    return part1(cleared)
-}
-
-val digitToNumberMap = mapOf(
-    "one" to "1",
-    "two" to "2",
-    "three" to "3",
-    "four" to "4",
-    "five" to "5",
-    "six" to "6",
-    "seven" to "7",
-    "eight" to "8",
-    "nine" to "9"
-)
-
-val regex = "(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)".toRegex()
-
-fun prepareLine(line: String): String
-{
-    var clearedLine = ""
-
-    for (i in line.indices)
+    fun part1(input: List<String>): Int
     {
-        val char = line[i]
+        val numbers = mutableListOf<Int>()
 
-        if(char.isDigit())
-        {
-            clearedLine += "$char"
-            continue
+        input.forEach { line ->
+            val lineNumbers = line
+                .filter { it.isDigit() }
+                .map { it.digitToInt() }
+
+            val first = lineNumbers.first()
+            val last = lineNumbers.last()
+            numbers.add("$first$last".toInt())
         }
 
-        val sub = line.substring(i)
-        for ((digit, number) in digitToNumberMap)
+        return numbers.sum()
+    }
+
+    fun part2(input: List<String>): Int
+    {
+        val cleared = input.map { prepareLine(it) }
+
+        return part1(cleared)
+    }
+
+    private fun prepareLine(line: String): String
+    {
+        var clearedLine = ""
+
+        for (i in line.indices)
         {
-            if(sub.startsWith(digit))
+            val char = line[i]
+
+            if(char.isDigit())
             {
-                clearedLine += number
-                break
+                clearedLine += "$char"
+                continue
+            }
+
+            val sub = line.substring(i)
+            for ((digit, number) in digitToNumberMap)
+            {
+                if(sub.startsWith(digit))
+                {
+                    clearedLine += number
+                    break
+                }
             }
         }
-    }
 
-    return clearedLine
+        return clearedLine
+    }
 }
